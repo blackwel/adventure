@@ -1,8 +1,10 @@
 #!/usr/bin/python
 
-import readline
-import sys
-import random
+# TODO - add error handling for moving in a direction that doesn't exist
+# TODO - fix error when using health potion:
+#  File "items.py", line 41, in use
+#    h = random.randrange(self.heal[0], self.heal[1])
+#  TypeError: 'float' object is not subscriptable
 
 LEFT = intern('left')
 RIGHT = intern('right')
@@ -16,6 +18,11 @@ QUIT = intern('quit')
 
 ALL_ACTIONS = [LEFT, RIGHT, FORWARDS, BACKWARDS, PICK_UP, USE, QUIT]
 
+import readline
+import sys
+import random
+import characters
+import items
 
 def main():
     room1 = Room()
@@ -37,31 +44,31 @@ def main():
     room6.connect(LEFT, room8)
     room6.connect(RIGHT, room9)
 
-    player = Player(room1, 100)
+    player = characters.Player(room1, 100)
 
     monsters = []
-    monsters.append(Monster(room3, 15))
-    monsters.append(Monster(room3, 15))
-    monsters.append(Monster(room2, 20))
-    monsters.append(Monster(room2, 15))
-    monsters.append(Monster(room4, 15))
-    monsters.append(Monster(room4, 20))
-    monsters.append(Monster(room6, 15))
-    monsters.append(Monster(room6, 5))
-    monsters.append(Monster(room6, 5))
-    monsters.append(Monster(room7, 25))
-    monsters.append(Monster(room7, 25))
+    monsters.append(characters.Monster(room3, 15))
+    monsters.append(characters.Monster(room3, 15))
+    monsters.append(characters.Monster(room2, 20))
+    monsters.append(characters.Monster(room2, 15))
+    monsters.append(characters.Monster(room4, 15))
+    monsters.append(characters.Monster(room4, 20))
+    monsters.append(characters.Monster(room6, 15))
+    monsters.append(characters.Monster(room6, 5))
+    monsters.append(characters.Monster(room6, 5))
+    monsters.append(characters.Monster(room7, 25))
+    monsters.append(characters.Monster(room7, 25))
 
     sword = []
-    sword.append(Sword(room1))
+    sword.append(items.Sword(room1))
 
     while player.is_alive():
         display_all(room1)
         print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
         action = intern(raw_input())
         if action == PICK_UP:
-            items = player.location.items
-            player.pickup(items)
+            _items = player.location.items
+            player.pickup(_items)
         elif action in [LEFT, RIGHT, FORWARDS, BACKWARDS]:
             player.move(action)
         elif action == USE:
@@ -86,104 +93,6 @@ def display_all(room):
             line = [r[i] for r in display_rooms]
             print " ".join(line)
         room = room.backwards
-
-class Actions(object):
-    pass
-
-class Item(object):
-    def __init__(self, location):
-        self.location = location
-        location.add_items(self)
-
-    def use(self, player, room):
-        print "nothing interesting happens"
-
-
-class Weapon(Item):
-    damage = 0
-
-class Sword(Weapon):
-    damage = (5,10)
-
-    def display(self):
-        return 's'
-
-    def use(self, player, room):
-        print "you attack with a sword"
-        enemy = room.get_enemy()
-        if enemy is None:
-            print "you swing the sword and hit nothing."
-            return
-        d = random.randrange(self.damage[0], self.damage[1])
-        print("you swing the sword for damage %d" %d)
-        enemy.damage(d)
-
-class Character(object):
-    items = None
-    location = None
-
-    def __init__(self, location, health):
-        self.items = []
-        self.location = location
-        location.add_character(self)
-        self.health = health
-
-    def move(self, direction):
-        new_room = None
-        if direction is LEFT:
-            new_room = self.location.left
-        elif direction is RIGHT:
-            new_room = self.location.right
-        elif direction is BACKWARDS:
-            new_room = self.location.backwards
-        elif direction is FORWARDS:
-            new_room = self.location.forwards
-        if new_room is None: raise Exception('you cannot travle any furthor')
-
-        self.location.remove_character(self)
-        new_room.add_character(self)
-        self.location = new_room
-
-    def damage(self, damage):
-        self.health = self.health - damage
-        print("%s has %d health left" % (self.display(), self.health))
-        if self.health<= 0:
-            self.location.remove_character(self)
-            self.location.add_items(self.items)
-            print("%s has died by death" % self.display())
-
-    def is_alive(self):
-        return self.health>=1
-
-class Player(Character):
-    def display(self):
-        return "P"
-    def pickup(self,items):
-        self.items = self.items + items
-        for i in items:
-            room = i.location
-            room.remove_items(i)
-    def use_items(self):
-        print 'your items are', [i.display() for i in self.items]
-        print 'which number item do you want to use?'
-        try:
-            items = int(raw_input())-1
-            items = self.items[items]
-        except IndexError:
-            print("invalid item")
-            return
-        items.use(self, self.location)
-
-class Monster(Character):
-    hurts  = (1,3)
-
-    def display(self):
-        return "M"
-
-    def attack(self, player):
-        d = random.randrange(self.hurts[0], self.hurts[1])
-        print("the monster swipes at you for damage %d" %d)
-        player.damage(d)
 
 class Room(object):
     left = None
@@ -220,15 +129,18 @@ class Room(object):
 
     def get_enemy(self):
         for c in self.characters:
-            if not isinstance(c, Player):
+            if not isinstance(c, characters.Player):
                 return c
         return None
 
     def add_items(self, items):
         if isinstance(items, list):
             self.items.extend(items)
+            for i in items:
+                i.location = self
         else:
             self.items.append(items)
+            items.location = self
 
     def remove_items(self, items):
         if not isinstance(items, list):
