@@ -32,12 +32,13 @@ class Sword(Weapon):
         enemy.damage(d)
 
 class Potion(Item):
-    heal = (10.25)
+    heal = (10, 25)
 
     def display(self):
         return 'h'
     
     def use(self, player, room):
+        player.remove_items(self)
         h = random.randrange(self.heal[0], self.heal[1])
-        print "you heal yourself for %d" % h
+        print "you heal yourself for %d" %h
         player.health = player.health+h

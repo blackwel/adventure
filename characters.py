@@ -3,6 +3,7 @@
 from adventure import LEFT, RIGHT, FORWARDS, BACKWARDS
 import items
 import random
+import logging
 
 class Character(object):
     items = None
@@ -24,7 +25,8 @@ class Character(object):
             new_room = self.location.backwards
         elif direction is FORWARDS:
             new_room = self.location.forwards
-        if new_room is None: raise Exception('you cannot travle any furthor')
+        if new_room is None:
+            raise Exception('you cannot travle any furthor')
 
         self.location.remove_character(self)
         new_room.add_character(self)
@@ -42,6 +44,12 @@ class Character(object):
         return self.health>=1
 
 class Player(Character):
+    def remove_items(self, items):
+        if not isinstance(items, list):
+            items = [items]
+        for i in items:
+            self.items.remove(i)
+
     def display(self):
         return "P"
     def pickup(self,items):
@@ -55,18 +63,21 @@ class Player(Character):
         try:
             items = int(raw_input())-1
             items = self.items[items]
-        except IndexError:
+        except (IndexError, ValueError):
             print("invalid item")
             return
         items.use(self, self.location)
 
 class Monster(Character):
-    hurts  = (1,3)
+    hurts  = (3,5)
 
     def __init__(self, location, health):
         Character.__init__(self, location, health)
         if random.random() < 0.3:
+            logging.debug("potion!")
             self.items.append(items.Potion())
+        else:
+            logging.debug("no potion")
   
     def display(self):
         return "M"
@@ -74,4 +85,23 @@ class Monster(Character):
     def attack(self, player):
         d = random.randrange(self.hurts[0], self.hurts[1])
         print("the monster swipes at you for damage %d" %d)
+        player.damage(d)
+
+class wizard(Character):
+    hurts  = (5,10)
+
+    def __init__(self, location, health):
+        Character.__init__(self, location, health)
+        if random.random() < 0.3:
+            logging.debug("potion!")
+            self.items.append(items.Potion())
+        else:
+            logging.debug("no potion")
+  
+    def display(self):
+        return "W"
+
+    def attack(self, player):
+        d = random.randrange(self.hurts[0], self.hurts[1])
+        print("the wizard shoots a death ball at you for damage %d" %d)
         player.damage(d)

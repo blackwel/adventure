@@ -1,10 +1,8 @@
 #!/usr/bin/python
 
-# TODO - add error handling for moving in a direction that doesn't exist
-# TODO - fix error when using health potion:
-#  File "items.py", line 41, in use
-#    h = random.randrange(self.heal[0], self.heal[1])
-#  TypeError: 'float' object is not subscriptable
+#build a file format for the map
+#
+
 
 LEFT = intern('left')
 RIGHT = intern('right')
@@ -23,8 +21,11 @@ import sys
 import random
 import characters
 import items
+import logging
 
 def main():
+    logging.basicConfig(filename="adventure.log")
+
     room1 = Room()
     room2 = Room()
     room3 = Room()
@@ -54,15 +55,15 @@ def main():
     monsters.append(characters.Monster(room4, 15))
     monsters.append(characters.Monster(room4, 20))
     monsters.append(characters.Monster(room6, 15))
-    monsters.append(characters.Monster(room6, 5))
-    monsters.append(characters.Monster(room6, 5))
-    monsters.append(characters.Monster(room7, 25))
-    monsters.append(characters.Monster(room7, 25))
+    monsters.append(characters.Monster(room7, 15))
+    monsters.append(characters.Monster(room7, 15))
+    monsters.append(characters.Monster(room6, 25))
+    wizard = characters.wizard(room6, 25)
 
     sword = []
     sword.append(items.Sword(room1))
 
-    while player.is_alive():
+    while player.is_alive() and wizard.is_alive(): 
         display_all(room1)
         print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
         action = intern(raw_input())
@@ -70,7 +71,10 @@ def main():
             _items = player.location.items
             player.pickup(_items)
         elif action in [LEFT, RIGHT, FORWARDS, BACKWARDS]:
-            player.move(action)
+            try:
+                player.move(action)
+            except Exception:
+                print "you walk straight into a wall great going"
         elif action == USE:
             player.use_items()
         elif action == QUIT:
