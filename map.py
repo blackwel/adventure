@@ -12,7 +12,7 @@ def create_map(filename="adventure.map"):
 
     map_dict = json.load(mapfile)
 
-    print("%r" % map_dict)
+    #print("%r" % map_dict)
 
     room1_dict = map_dict["room1"]
 
