@@ -11,38 +11,51 @@ def create_map(filename="adventure.map"):
 
     mapfile = open(filename)
 
-    map_dict = json.load(mapfile)
-
-    room_dict = map_dict["room1"]
+    map_dict = json.load(mapfile, strict=False)
 
     directions = set((LEFT, RIGHT, BACKWARDS, FORWARDS))
 
-    room_contents = (k for k in room_dict.keys() if k not in directions)
 
     modules = itertools.chain(
         characters.__dict__.iteritems(),
         items.__dict__.iteritems())
     types = dict(((k,v) for (k,v) in modules if type(v) is type))
 
+    room1 = None
     wizard = None
 
-    room = Room()
-    for k in room_contents:
-        entry = room_dict[k]
-        classname = entry.pop('class')
-        _type = types[classname]
-        item = _type(location=room, **entry)
-        if isinstance(item, characters.Character):
-            room.add_character(item)
-        elif isinstance(item, items.Item):
-            room.add_items(item)
-        else:
-            raise Exception("invalid entry in room")
-        if isinstance(item, characters.wizard):
-            wizard = item
+    connections = map_dict.pop('connections')
+    rooms = dict()
 
-    return room, wizard
+    for room_name in map_dict.keys():
+        room_dict = map_dict[room_name]
+        room_contents = room_dict.keys()
 
+        room = Room()
+        for k in room_contents:
+            #print k
+            entry = room_dict[k]
+            classname = entry.pop('class')
+            _type = types[classname]
+            item = _type(location=room, **entry)
+            if isinstance(item, characters.wizard):
+                wizard = item
+        if room_name == "room1":
+            room1 = room
+        rooms[room_name] = room
+
+    for c in connections:
+        room_name = c.keys()[0]
+        direction, other_room = c[room_name].items()[0]
+        #print room_name, direction, other_room
+        room = rooms[room_name]
+        other = rooms[other_room]
+        direction = intern(str(direction))
+        room.connect(LEFT, other)
+
+    return room1, wizard
+
+def old_create_map():
     room1 = Room()
     room2 = Room()
     room3 = Room()
