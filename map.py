@@ -5,6 +5,7 @@ import characters
 import items
 import logging
 import json
+import itertools
 
 def create_map(filename="adventure.map"):    
 
@@ -12,9 +13,35 @@ def create_map(filename="adventure.map"):
 
     map_dict = json.load(mapfile)
 
-    #print("%r" % map_dict)
+    room_dict = map_dict["room1"]
 
-    room1_dict = map_dict["room1"]
+    directions = set((LEFT, RIGHT, BACKWARDS, FORWARDS))
+
+    room_contents = (k for k in room_dict.keys() if k not in directions)
+
+    modules = itertools.chain(
+        characters.__dict__.iteritems(),
+        items.__dict__.iteritems())
+    types = dict(((k,v) for (k,v) in modules if type(v) is type))
+
+    wizard = None
+
+    room = Room()
+    for k in room_contents:
+        entry = room_dict[k]
+        classname = entry.pop('class')
+        _type = types[classname]
+        item = _type(location=room, **entry)
+        if isinstance(item, characters.Character):
+            room.add_character(item)
+        elif isinstance(item, items.Item):
+            room.add_items(item)
+        else:
+            raise Exception("invalid entry in room")
+        if isinstance(item, characters.wizard):
+            wizard = item
+
+    return room, wizard
 
     room1 = Room()
     room2 = Room()

@@ -3,7 +3,8 @@
 		"sword" : { "class" : "Sword" },
 		"right" : "room2",
 		"left" : "room3",
-		"backwards" : "room4"
+		"backwards" : "room4",
+		"wizard" : { "class" : "wizard", "health" : 25 }
 	},
 	"room2": {
 	       "monster" : { "class" : "Monster", "health" : 15 }
