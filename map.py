@@ -51,7 +51,7 @@ def create_map(filename="adventure.map"):
         room = rooms[room_name]
         other = rooms[other_room]
         direction = intern(str(direction))
-        room.connect(LEFT, other)
+        room.connect(direction, other)
 
     return room1, wizard
 

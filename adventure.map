@@ -1,13 +1,46 @@
 {
-	"room1" : {
-		"sword" : { "class" : "Sword" },
-		
+	"room6" : {
+
 		"wizard" : { "class" : "wizard", "health" : 25 }
 	},
+
 	"room2": {
 	       "monster" : { "class" : "Monster", "health" : 15 }
 	},
+
+	"room3": {
+	       "monster" : { "class" : "Monster", "health" : 15 }
+	},
+
+	"room4": {
+	       "monster" : { "class" : "Monster", "health" : 15 }
+	},
+
+	"room5": {
+	       "monster" : { "class" : "Monster", "health" : 15 }
+	},
+
+
+	"room1": {
+		"sword" : { "class" : "Sword" },
+	       "monster" : { "class" : "Monster", "health" : 15 }
+	},
+
+
+	"room7": {
+	       "monster" : { "class" : "Monster", "health" : 15 }
+	},
+
+
+	"room8": {
+	       "monster" : { "class" : "Monster", "health" : 15 }
+	},
+
 	"connections" : [
-		      { "room1" : { "backwards" : "room2" } }
+		      { "room1" : { "backwards" : "room2" } },
+		      { "room2" : { "backwards" : "room3" } },
+		      { "room3" : { "backwards" : "room4" } },
+		      { "room4" : { "backwards" : "room5" } },
+		      { "room5" : { "right" : "room6" } }
 	]
 }
