@@ -28,7 +28,10 @@ import map
 def main():
     logging.basicConfig(filename="adventure.log")
 
-    room1, wizard = map.create_map()
+    level = 1
+    mapname = "adventure%d.map" % level
+
+    room1, wizard = map.create_map(mapname)
 
     player = characters.Player(room1, 100)
 
@@ -36,20 +39,10 @@ def main():
         display_all(room1)
         print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
         action = intern(raw_input())
-        if action == PICK_UP:
-            _items = player.location.items
-            player.pickup(_items)
-        elif action in [LEFT, RIGHT, FORWARDS, BACKWARDS]:
-            try:
-                player.move(action)
-            except Exception:
-                print "you walk straight into a wall great going"
-        elif action == USE:
-            player.use_items()
-        elif action == QUIT:
+
+        keep_playing = do_action(action, player)
+        if not keep_playing:
             break
-        else:
-            print "I didn't understand '%s', must be one of %r" % (action, ALL_ACTIONS)
 
         enemy = player.location.get_enemy()
         if enemy is not None:
@@ -67,6 +60,22 @@ def display_all(room):
             print " ".join(line)
         room = room.backwards
 
+def do_action(action, player):
+    if action == PICK_UP:
+        _items = player.location.items
+        player.pickup(_items)
+    elif action in [LEFT, RIGHT, FORWARDS, BACKWARDS]:
+        try:
+            player.move(action)
+        except Exception:
+            print "you walk straight into a wall great going"
+    elif action == USE:
+        player.use_items()
+    elif action == QUIT:
+        return False
+    else:
+        print "I didn't understand '%s', must be one of %r" % (action, ALL_ACTIONS)
+    return True
 
 if __name__ == '__main__':
     sys.exit(main())
