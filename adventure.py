@@ -13,6 +13,8 @@ BACKWARDS = intern('backwards')
 PICK_UP = intern('pick up')
 USE = intern('use')
 
+KONAMICODE = intern('upupdowndown')
+
 QUIT = intern('quit')
 
 ALL_ACTIONS = [LEFT, RIGHT, FORWARDS, BACKWARDS, PICK_UP, USE, QUIT]
@@ -71,6 +73,11 @@ def do_action(action, player):
             print "you walk straight into a wall great going"
     elif action == USE:
         player.use_items()
+    elif action == KONAMICODE:
+        print "how much health do you want?" 
+        bonus = int(raw_input())
+        player.health = player.health + bonus
+        print  "your health is %d, you cheater, feel bad"%player.health
     elif action == QUIT:
         return False
     else:
