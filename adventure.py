@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-# TODO - load a second map once the game has ended.
 # TODO - build a map creator applicaton
 # TODO - fix display_all() so that it adds spaces where needed
 
@@ -26,34 +25,24 @@ import items
 import logging
 import map
 
+class QuitException(Exception):
+    pass
+
 def main():
     logging.basicConfig(filename="adventure.log")
 
     player = characters.Player(None, 100)
 
-    for level in (1, 2):
-        mapname = "adventure%d.map" % level
+    try:
+        for level in (1, 2):
+            mapname = "adventure%d.map" % level
 
-        room1, wizard = map.create_map(mapname)
+            play_level(mapname, player)
 
-        room1.add_character(player)
-        player.location = room1
-
-        while player.is_alive() and wizard.is_alive(): 
-            display_all(room1)
-            print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
-            action = intern(raw_input())
-
-            keep_playing = do_action(action, player)
-            if not keep_playing:
+            if not player.is_alive():
                 return
-
-            enemy = player.location.get_enemy()
-            if enemy is not None:
-                enemy.attack(player)
-
-        if not player.is_alive():
-            return
+    except QuitException:
+        pass
 
 def display_all(room):
     while room is not None:
@@ -84,10 +73,28 @@ def do_action(action, player):
         player.health = player.health + bonus
         print  "your health is %d, you cheater, feel bad"%player.health
     elif action == QUIT:
-        return False
+        raise QuitException()
     else:
         print "I didn't understand '%s', must be one of %r" % (action, ALL_ACTIONS)
     return True
+
+def play_level(mapname, player):
+    room1, wizard = map.create_map(mapname)
+
+    room1.add_character(player)
+    player.location = room1
+
+    while player.is_alive() and wizard.is_alive(): 
+        display_all(room1)
+        print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
+        action = intern(raw_input())
+
+        do_action(action, player)
+
+        enemy = player.location.get_enemy()
+        if enemy is not None:
+            enemy.attack(player)
+
 
 if __name__ == '__main__':
     sys.exit(main())
