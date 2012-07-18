@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-#build a file format for the map
-#
-
+# TODO - load a second map once the game has ended.
+# TODO - add cheats
+# TODO - build a map creator applicaton
+# TODO - fix display_all() so that it adds spaces where needed
 
 LEFT = intern('left')
 RIGHT = intern('right')

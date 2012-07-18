@@ -7,21 +7,21 @@ import logging
 import json
 import itertools
 
+directions = set((LEFT, RIGHT, BACKWARDS, FORWARDS))
+
+
+def load_types(*args):
+    modules = itertools.chain(*[m.__dict__.iteritems() for m in args])
+    return dict(((k,v) for (k,v) in modules if type(v) is type))
+
+types = load_types(characters, items)
+
 def create_map(filename="adventure.map"):    
 
     mapfile = open(filename)
 
     map_dict = json.load(mapfile, strict=False)
 
-    directions = set((LEFT, RIGHT, BACKWARDS, FORWARDS))
-
-
-    modules = itertools.chain(
-        characters.__dict__.iteritems(),
-        items.__dict__.iteritems())
-    types = dict(((k,v) for (k,v) in modules if type(v) is type))
-
-    room1 = None
     wizard = None
 
     connections = map_dict.pop('connections')
@@ -40,8 +40,6 @@ def create_map(filename="adventure.map"):
             item = _type(location=room, **entry)
             if isinstance(item, characters.wizard):
                 wizard = item
-        if room_name == "room1":
-            room1 = room
         rooms[room_name] = room
 
     for c in connections:
@@ -53,45 +51,7 @@ def create_map(filename="adventure.map"):
         direction = intern(str(direction))
         room.connect(direction, other)
 
-    return room1, wizard
-
-def old_create_map():
-    room1 = Room()
-    room2 = Room()
-    room3 = Room()
-    room4 = Room()
-    room5 = Room()
-    room6 = Room()
-    room7 = Room()
-    room8 = Room()
-    room9 = Room()
-
-    room1.connect(RIGHT, room2)
-    room1.connect(LEFT, room3)
-    room1.connect(BACKWARDS, room4)
-    room4.connect(RIGHT, room5)
-    room4.connect(LEFT, room7)
-    room4.connect(BACKWARDS, room6)
-    room6.connect(LEFT, room8)
-    room6.connect(RIGHT, room9)
-
-    monsters = []
-    monsters.append(characters.Monster(room3, 15))
-    monsters.append(characters.Monster(room3, 15))
-    monsters.append(characters.Monster(room2, 20))
-    monsters.append(characters.Monster(room2, 15))
-    monsters.append(characters.Monster(room4, 15))
-    monsters.append(characters.Monster(room4, 20))
-    monsters.append(characters.Monster(room6, 15))
-    monsters.append(characters.Monster(room7, 15))
-    monsters.append(characters.Monster(room7, 15))
-    monsters.append(characters.Monster(room6, 25))
-    wizard = characters.wizard(room6, 25)
-
-    sword = []
-    sword.append(items.Sword(room1))
-
-    return room1, wizard
+    return rooms['room1'], wizard
 
 class Room(object):
     left = None

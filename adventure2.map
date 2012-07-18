@@ -1,0 +1,51 @@
+{
+	"room1" : {
+		"sword" : { "class" : "Sword" }
+	},
+
+	"room2": {
+	       "monster1" : { "class" : "Monster", "health" : 20 },
+	       "monster2" : { "class" : "Monster", "health" : 15 }
+	},
+
+	"room3": {
+	       "monster1" : { "class" : "Monster", "health" : 15 },
+	       "monster2" : { "class" : "Monster", "health" : 15 }
+	},
+
+	"room4": {
+	       "monster1" : { "class" : "Monster", "health" : 15 },
+	       "monster2" : { "class" : "Monster", "health" : 20 }
+	},
+
+	"room5": {
+	},
+
+	"room6": {
+	       "monster1" : { "class" : "Monster", "health" : 15 },
+	       "monster2" : { "class" : "Monster", "health" : 25 },
+	       "wizard" : { "class" : "wizard", "health" : 25 }
+	},
+
+	"room7": {
+	       "monster1" : { "class" : "Monster", "health" : 15 },
+	       "monster2" : { "class" : "Monster", "health" : 15 }
+	},
+
+	"room8": {
+	},
+
+	"room9": {
+	},
+
+	"connections" : [
+		      { "room1" : { "right" : "room2" } },
+		      { "room1" : { "left" : "room3" } },
+		      { "room1" : { "backwards" : "room4" } },
+		      { "room4" : { "right" : "room5" } },
+		      { "room4" : { "left" : "room7" } },
+		      { "room4" : { "backwards" : "room6" } },
+		      { "room6" : { "left" : "room8" } },
+		      { "room6" : { "right" : "room9" } }
+	]
+}
