@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 # TODO - load a second map once the game has ended.
-# TODO - add cheats
 # TODO - build a map creator applicaton
 # TODO - fix display_all() so that it adds spaces where needed
 
@@ -30,25 +29,31 @@ import map
 def main():
     logging.basicConfig(filename="adventure.log")
 
-    level = 1
-    mapname = "adventure%d.map" % level
+    player = characters.Player(None, 100)
 
-    room1, wizard = map.create_map(mapname)
+    for level in (1, 2):
+        mapname = "adventure%d.map" % level
 
-    player = characters.Player(room1, 100)
+        room1, wizard = map.create_map(mapname)
 
-    while player.is_alive() and wizard.is_alive(): 
-        display_all(room1)
-        print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
-        action = intern(raw_input())
+        room1.add_character(player)
+        player.location = room1
 
-        keep_playing = do_action(action, player)
-        if not keep_playing:
-            break
+        while player.is_alive() and wizard.is_alive(): 
+            display_all(room1)
+            print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
+            action = intern(raw_input())
 
-        enemy = player.location.get_enemy()
-        if enemy is not None:
-            enemy.attack(player)
+            keep_playing = do_action(action, player)
+            if not keep_playing:
+                return
+
+            enemy = player.location.get_enemy()
+            if enemy is not None:
+                enemy.attack(player)
+
+        if not player.is_alive():
+            return
 
 def display_all(room):
     while room is not None:

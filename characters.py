@@ -12,7 +12,8 @@ class Character(object):
     def __init__(self, location, health):
         self.items = []
         self.location = location
-        location.add_character(self)
+        if location:
+            location.add_character(self)
         self.health = health
 
     def move(self, direction):
@@ -73,7 +74,7 @@ class Monster(Character):
 
     def __init__(self, location, health):
         Character.__init__(self, location, health)
-        if random.random() < 0.3:
+        if random.random() < 0.4:
             logging.debug("potion!")
             self.items.append(items.Potion())
         else:

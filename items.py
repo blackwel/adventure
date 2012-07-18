@@ -32,7 +32,7 @@ class Sword(Weapon):
         enemy.damage(d)
 
 class Potion(Item):
-    heal = (10, 25)
+    heal = (25, 50)
 
     def display(self):
         return 'h'
