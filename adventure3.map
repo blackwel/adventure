@@ -3,22 +3,22 @@
     "connections": [
         {
             "room2": {
-                "forwards": "room1"
+                "right": "room1"
             }
         }, 
         {
             "room3": {
-                "backwards": "room2"
+                "right": "room2"
             }
         }, 
         {
             "room4": {
-                "right": "room3"
+                "backwards": "room2"
             }
         }, 
         {
             "room5": {
-                "left": "room4"
+                "left": "room1"
             }
         }, 
         {
@@ -28,30 +28,36 @@
         }, 
         {
             "room7": {
-                "forwards": "room5"
+                "left": "room2"
+            }
+        }, 
+        {
+            "room8": {
+                "backwards": "room7"
             }
         }
     ], 
     "room7": {}, 
     "room4": {
         "monster0": {
-            "health": 17, 
-            "class": "Monster"
-        }, 
-        "monster1": {
-            "health": 11, 
-            "class": "Monster"
-        }
-    }, 
-    "room5": {}, 
-    "room2": {}, 
-    "room3": {
-        "monster0": {
             "health": 10, 
             "class": "Monster"
         }, 
         "monster1": {
-            "health": 15, 
+            "health": 16, 
+            "class": "Monster"
+        }
+    }, 
+    "room5": {
+        "monster0": {
+            "health": 13, 
+            "class": "Monster"
+        }
+    }, 
+    "room2": {}, 
+    "room3": {
+        "monster0": {
+            "health": 17, 
             "class": "Monster"
         }
     }, 
@@ -59,9 +65,19 @@
         "monster0": {
             "health": 19, 
             "class": "Monster"
+        }
+    }, 
+    "room8": {
+        "wizard": {
+            "health": 20, 
+            "class": "wizard"
+        }, 
+        "monster0": {
+            "health": 21, 
+            "class": "Monster"
         }, 
         "monster1": {
-            "health": 10, 
+            "health": 23, 
             "class": "Monster"
         }
     }

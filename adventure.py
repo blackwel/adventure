@@ -48,7 +48,7 @@ def display_all(room):
     while room is not None:
         row = room.rows()
         display_rooms = []
-        for r in row:
+        for r in row:r
             display = r.display()
             display_rooms.append(display)
         for i in range(5):
