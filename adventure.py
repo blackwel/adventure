@@ -45,12 +45,14 @@ def main():
         pass
 
 def display_all(room):
+    #todo move room forwards as much as possible
     while room is not None:
         row = room.rows()
         display_rooms = []
         for r in row:r
             display = r.display()
             display_rooms.append(display)
+            #add spaces to the beginning of line to line up room 1 correctly
         for i in range(5):
             line = [r[i] for r in display_rooms]
             print " ".join(line)
@@ -80,9 +82,10 @@ def do_action(action, player):
 
 def play_level(mapname, player):
     room1, wizard = map.create_map(mapname)
-
     room1.add_character(player)
     player.location = room1
+
+    map_grid = build_map_grid(room1)
 
     while player.is_alive() and wizard.is_alive(): 
         display_all(room1)
@@ -95,6 +98,26 @@ def play_level(mapname, player):
         if enemy is not None:
             enemy.attack(player)
 
+def build_map_grid(room1):
+    map_grid = [[room1]]
+
+    room1.coords = (0,0)
+
+    next_rooms = [room1]
+    done_romms = set()
+
+    while next_rooms:
+        current_room = next_rooms.pop()
+        # TODO - calculate coordinates of current_room
+        # TODO - expand map_grid if necessary
+        # TODO - put current_room into map_grid at its coordinates
+        # TODO - add all new neighbors of current_room to next_rooms
+
+    return map_grid
+
+def expand_grid(map_grid, direction):
+    # TODO - expand the grid in a given direction
+    pass
 
 if __name__ == '__main__':
     sys.exit(main())

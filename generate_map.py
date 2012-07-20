@@ -82,6 +82,5 @@ def create_wizard(map_dict, num_rooms):
     room["wizard"] = wizard
     # TODO - add the wizard to the chosen room
 
-
 if __name__ == '__main__':
     generate(sys.argv[1])
