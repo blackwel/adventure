@@ -6,7 +6,6 @@ import json
 from adventure import LEFT, RIGHT, FORWARDS, BACKWARDS
 
 def generate(mapname):
-    # TODO pick a random number of rooms to generate
     room_count = random.randint(7,15)
 
     map_dict = dict()
@@ -14,18 +13,13 @@ def generate(mapname):
     map_dict['connections'] = connections
 
     for room_num in range(room_count):
-        # TODO create a room and save it in a dictionary
         room_name = "room%d" % (room_num + 1)
         room = dict()
         map_dict[room_name] = room
         
-
-        # TODO create random monsters
         monster_count = random.randint(0,2)
         for monster_num in range(monster_count):
             create_monster(monster_num, room)
-
-        # TODO create random items
 
         if room_num > 0:
             while True:
@@ -80,7 +74,6 @@ def create_wizard(map_dict, num_rooms):
     room_name = "room%d" % room_num
     room = map_dict[room_name]
     room["wizard"] = wizard
-    # TODO - add the wizard to the chosen room
 
 if __name__ == '__main__':
     generate(sys.argv[1])

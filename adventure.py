@@ -20,6 +20,7 @@ ALL_ACTIONS = [LEFT, RIGHT, FORWARDS, BACKWARDS, PICK_UP, USE, QUIT]
 import readline
 import sys
 import random
+
 import characters
 import items
 import logging
@@ -34,6 +35,7 @@ def main():
     player = characters.Player(None, 100)
 
     try:
+        # TODO - map file discovery
         for level in (1, 2):
             mapname = "adventure%d.map" % level
 
@@ -49,7 +51,7 @@ def display_all(room):
     while room is not None:
         row = room.rows()
         display_rooms = []
-        for r in row:r
+        for r in row:
             display = r.display()
             display_rooms.append(display)
             #add spaces to the beginning of line to line up room 1 correctly
@@ -90,6 +92,8 @@ def play_level(mapname, player):
     while player.is_alive() and wizard.is_alive(): 
         display_all(room1)
         print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
+
+        # TODO - make this accept extra spaces
         action = intern(raw_input())
 
         do_action(action, player)
