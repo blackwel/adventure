@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from adventure import LEFT, RIGHT, FORWARDS, BACKWARDS
+from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
 import items
 import random
 import logging

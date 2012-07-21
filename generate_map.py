@@ -3,7 +3,7 @@
 import sys
 import random
 import json
-from adventure import LEFT, RIGHT, FORWARDS, BACKWARDS
+from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
 
 def generate(mapname):
     room_count = random.randint(7,15)

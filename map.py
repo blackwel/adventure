@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from adventure import RIGHT, LEFT, BACKWARDS, FORWARDS
+from directions import RIGHT, LEFT, BACKWARDS, FORWARDS
 import characters
 import items
 import logging
@@ -36,7 +36,13 @@ def create_map(filename="adventure.map"):
             #print k
             entry = room_dict[k]
             classname = entry.pop('class')
-            _type = types[classname]
+            _type = None
+            try:
+                _type = types[classname]
+            except KeyError as er:
+                logging.error("type not found! %r, types: %r" %
+                              (er, types.keys()))
+                raise
             item = _type(location=room, **entry)
             if isinstance(item, characters.wizard):
                 wizard = item

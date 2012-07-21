@@ -3,10 +3,7 @@
 # TODO - build a map creator applicaton
 # TODO - fix display_all() so that it adds spaces where needed
 
-LEFT = intern('left')
-RIGHT = intern('right')
-FORWARDS = intern('forwards')
-BACKWARDS = intern('backwards')
+from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
 
 PICK_UP = intern('pick up')
 USE = intern('use')
@@ -20,17 +17,18 @@ ALL_ACTIONS = [LEFT, RIGHT, FORWARDS, BACKWARDS, PICK_UP, USE, QUIT]
 import readline
 import sys
 import random
+import logging
 
 import characters
 import items
-import logging
 import map
 
 class QuitException(Exception):
     pass
 
 def main():
-    logging.basicConfig(filename="adventure.log")
+    logging.basicConfig(filename="adventure.log", filemode='w+', level=logging.DEBUG)
+    logging.info("Starting up adventure game")
 
     player = characters.Player(None, 100)
 
