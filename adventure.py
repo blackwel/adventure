@@ -59,7 +59,7 @@ def display_all(room):
         room = room.backwards
 
 def do_action(action, player):
-    if action == PICK_UP:
+    if action is PICK_UP:
         _items = player.location.items
         player.pickup(_items)
     elif action in [LEFT, RIGHT, FORWARDS, BACKWARDS]:
@@ -67,14 +67,14 @@ def do_action(action, player):
             player.move(action)
         except Exception:
             print "you walk straight into a wall great going"
-    elif action == USE:
+    elif action is USE:
         player.use_items()
-    elif action == KONAMICODE:
+    elif action is KONAMICODE:
         print "how much health do you want?" 
         bonus = int(raw_input())
         player.health = player.health + bonus
         print  "your health is %d, you cheater, feel bad"%player.health
-    elif action == QUIT:
+    elif action is QUIT:
         raise QuitException()
     else:
         print "I didn't understand '%s', must be one of %r" % (action, ALL_ACTIONS)

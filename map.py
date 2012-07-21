@@ -71,16 +71,16 @@ class Room(object):
         self.characters = []
         self.items = []
     def connect(room1, direction, room2):
-        if direction == RIGHT:
+        if direction is RIGHT:
             room1.right = room2
             room2.left = room1
-        elif direction == LEFT:
+        elif direction is LEFT:
             room1.left = room2
             room2.right = room1
-        elif direction == FORWARDS:
+        elif direction is FORWARDS:
             room1.forwards = room2
             room2.backwards = room1
-        elif direction == BACKWARDS:
+        elif direction is BACKWARDS:
             room1.backwards = room2
             room2.forwards = room1
         else:

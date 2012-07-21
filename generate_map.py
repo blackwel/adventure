@@ -38,13 +38,13 @@ def generate(mapname):
     mapfile.close()
 
 def opposite(direction):
-    if direction == LEFT:
+    if direction is LEFT:
         return RIGHT
-    elif direction == RIGHT:
+    elif direction is RIGHT:
         return LEFT
-    elif direction == FORWARDS:
+    elif direction is FORWARDS:
         return BACKWARDS
-    elif direction == BACKWARDS:
+    elif direction is BACKWARDS:
         return FORWARDS
     else:
         return None
@@ -54,9 +54,9 @@ def check_connection(connections, room_name, direction, other_room_name):
         r = conect.keys()[0]
         d = conect[r].keys()[0]
         o = conect[r].values()[0]
-        if r == room_name and d == opposite(direction):
+        if r == room_name and d is opposite(direction):
             return False
-        if o == other_room_name and d == direction:
+        if o == other_room_name and d is direction:
             return False
     return True
 
