@@ -113,10 +113,13 @@ def build_map_grid(room1):
         current_room = next_rooms.pop()
         row, col = current_room.coords
 
-        # TODO - expand map_grid if necessary
-
-        # TODO - put current_room into map_grid at its coordinates
-        # TODO - add all new neighbors of current_room to next_rooms
+        if row => map_height or row < 0 or col >= map_width or col > 0:
+            expand_grid(map_grid,row, col)       
+        map_grid[row][col] = current_room    
+# TODO - add all new neighbors of current_room to next_rooms
+        right = current.room.right 
+        if right is not None and right not in done_rooms:
+            next_rooms.append(right)
         # TODO - calculate coordinates of neighbors
         # TODO - add current_room to done_rooms
 
