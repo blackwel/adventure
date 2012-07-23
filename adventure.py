@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-# TODO - build a map creator applicaton
 # TODO - fix display_all() so that it adds spaces where needed
 
 from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
@@ -101,19 +100,26 @@ def play_level(mapname, player):
             enemy.attack(player)
 
 def build_map_grid(room1):
-    map_grid = [[room1]]
+    map_grid = [[]]
+    map_width = 0
+    map_height = 0
 
     room1.coords = (0,0)
 
     next_rooms = [room1]
-    done_romms = set()
+    done_rooms = set()
 
     while next_rooms:
         current_room = next_rooms.pop()
-        # TODO - calculate coordinates of current_room
+        row, col = current_room.coords
+
         # TODO - expand map_grid if necessary
+
         # TODO - put current_room into map_grid at its coordinates
         # TODO - add all new neighbors of current_room to next_rooms
+        # TODO - calculate coordinates of neighbors
+        # TODO - add current_room to done_rooms
+
 
     return map_grid
 
