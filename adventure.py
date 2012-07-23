@@ -100,7 +100,7 @@ def play_level(mapname, player):
             enemy.attack(player)
 
 def build_map_grid(room1):
-    map_grid = [[]]
+    map_grid = [[None]]
     map_width = 0
     map_height = 0
 
@@ -114,21 +114,64 @@ def build_map_grid(room1):
         row, col = current_room.coords
 
         if row => map_height or row < 0 or col >= map_width or col > 0:
-            expand_grid(map_grid,row, col)       
-        map_grid[row][col] = current_room    
-# TODO - add all new neighbors of current_room to next_rooms
+            expand_grid(map_grid,row, col, next_rooms)
+            # TODO - update row and col with the offset from expand_grid
+            # TODO - update current_room.coords with the offset from expand_grid
+        map_grid[row][col] = current_room
+    
         right = current.room.right 
         if right is not None and right not in done_rooms:
             next_rooms.append(right)
-        # TODO - calculate coordinates of neighbors
-        # TODO - add current_room to done_rooms
+            right.coords = (row, col + 1)
 
+        forwards = current.room.forwards 
+        if forwards is not None and forwards not in done_rooms:
+            next_rooms.append(forwards)
+            forwards.coords = (row -1, col)
+
+        backwards = current.room.backwards 
+        if backwards is not None and backwards not in done_rooms:
+            next_rooms.append(backwards)
+            backwards.coords = (row +1, col)
+
+        left  = current.room.left 
+        if left is not None and left not in done_rooms:
+            next_rooms.append(left)
+            left.coords = (row, col - 1)
+        done_rooms.add(current_room)
 
     return map_grid
 
-def expand_grid(map_grid, direction):
+def expand_grid(map_grid, row, col, next_rooms):
     # TODO - expand the grid in a given direction
-    pass
+
+    height = len(map_grid)
+    width = len(map_grid[0])
+
+    offset = (0, 0)
+
+    if row < 0:
+        offset[0] = 1
+                new_row = [None for i in range(width)]
+        map_grid.insert(0, new_row)
+    if col < 0:
+        offset[1] = 1
+        for row in map_grid:
+            row.insert(0, None)
+    if row >= height:
+        new_row = [None for i in range(width)]
+        map_grid.append(new_row)
+    if col >= width:
+        for row in map_grid:
+            row.append(None)
+    for row in map_grid:
+        for room in row:
+            pass
+            # TODO add offset to coordinates of each room
+
+    for room in next_rooms:
+        pass
+        #TODO add offset to coordinates for each room
 
 if __name__ == '__main__':
     sys.exit(main())
