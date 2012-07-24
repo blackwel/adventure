@@ -45,6 +45,10 @@ class Character(object):
         return self.health>=1
 
 class Player(Character):
+    def __init__(self, location, health):
+        Character.__init__(self, location, health)
+        self.items.append(items.Sword())
+
     def remove_items(self, items):
         if not isinstance(items, list):
             items = [items]

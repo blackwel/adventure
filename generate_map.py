@@ -4,6 +4,7 @@ import sys
 import random
 import json
 from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
+import unittest
 
 def generate(mapname):
     room_count = random.randint(7,15)
@@ -32,6 +33,8 @@ def generate(mapname):
                     break
 
     create_wizard(map_dict, room_count)
+
+    # TODO - add error check that the map can be displayed before we save it
 
     mapfile = open(mapname, 'w+')
     json.dump(map_dict, mapfile, indent=4)
@@ -74,6 +77,28 @@ def create_wizard(map_dict, num_rooms):
     room_name = "room%d" % room_num
     room = map_dict[room_name]
     room["wizard"] = wizard
+
+class TestOpposite(unittest.TestCase):
+    def test_opposite(self):
+        self.assertIs(opposite(LEFT), RIGHT)
+        self.assertIs(opposite(RIGHT), LEFT)
+        self.assertIs(opposite(FORWARDS), BACKWARDS)
+        self.assertIs(opposite(BACKWARDS), FORWARDS)
+
+class TestConnection(unittest.TestCase):
+    def setUp(self):
+        self.connections = [ { "room2" : { "right" : "room1" } } ]
+
+    def test_same(self):
+        # TODO - implement this test case
+        pass
+
+    def test_opposite(self):
+        # TODO - fix this test failure
+        self.assertFalse( check_connection(self.connections, "room7", LEFT, "room2") )
+
+def run_tests():
+    unittest.main('generate_map')
 
 if __name__ == '__main__':
     generate(sys.argv[1])

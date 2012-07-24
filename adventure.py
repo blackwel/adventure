@@ -57,6 +57,20 @@ def display_all(room):
             print " ".join(line)
         room = room.backwards
 
+def display_grid(map_grid):
+    for row in map_grid:
+        display_rooms = []
+        for r in row:
+            display = None
+            if r is None:
+                display = ["       " for i in xrange(5)]
+            else:
+                display = r.display()
+            display_rooms.append(display)
+        for i in range(5):
+            line = [r[i] for r in display_rooms]
+            print " ".join(line)
+
 def do_action(action, player):
     if action is PICK_UP:
         _items = player.location.items
@@ -87,7 +101,7 @@ def play_level(mapname, player):
     map_grid = build_map_grid(room1)
 
     while player.is_alive() and wizard.is_alive(): 
-        display_all(room1)
+        display_grid(map_grid)
         print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
 
         # TODO - make this accept extra spaces
@@ -104,7 +118,7 @@ def build_map_grid(room1):
     map_width = 0
     map_height = 0
 
-    room1.coords = (0,0)
+    room1.coords = [0,0]
 
     next_rooms = [room1]
     done_rooms = set()
@@ -113,32 +127,39 @@ def build_map_grid(room1):
         current_room = next_rooms.pop()
         row, col = current_room.coords
 
-        if row => map_height or row < 0 or col >= map_width or col > 0:
-            expand_grid(map_grid,row, col, next_rooms)
-            # TODO - update row and col with the offset from expand_grid
-            # TODO - update current_room.coords with the offset from expand_grid
+        if row >= map_height or row < 0 or col >= map_width or col > 0:
+            offset = expand_grid(map_grid,row, col, next_rooms)
+            current_room.coords[0] = current_room.coords[0] + offset[0]
+            current_room.coords[1] = current_room.coords[1] + offset[1]
+            row = row + offset[0]
+            col = col + offset[1]
+
+        if map_grid[row][col] is not None:
+            raise Exception("duplicate room")
         map_grid[row][col] = current_room
     
-        right = current.room.right 
+        right = current_room.right 
         if right is not None and right not in done_rooms:
             next_rooms.append(right)
-            right.coords = (row, col + 1)
+            right.coords = [row, col + 1]
 
-        forwards = current.room.forwards 
+        forwards = current_room.forwards 
         if forwards is not None and forwards not in done_rooms:
             next_rooms.append(forwards)
-            forwards.coords = (row -1, col)
+            forwards.coords = [row -1, col]
 
-        backwards = current.room.backwards 
+        backwards = current_room.backwards 
         if backwards is not None and backwards not in done_rooms:
             next_rooms.append(backwards)
-            backwards.coords = (row +1, col)
+            backwards.coords = [row +1, col]
 
-        left  = current.room.left 
+        left  = current_room.left 
         if left is not None and left not in done_rooms:
             next_rooms.append(left)
-            left.coords = (row, col - 1)
+            left.coords = [row, col - 1]
         done_rooms.add(current_room)
+
+    # TODO - check why there are extra blank rows at the end
 
     return map_grid
 
@@ -148,11 +169,11 @@ def expand_grid(map_grid, row, col, next_rooms):
     height = len(map_grid)
     width = len(map_grid[0])
 
-    offset = (0, 0)
+    offset = [0, 0]
 
     if row < 0:
         offset[0] = 1
-                new_row = [None for i in range(width)]
+        new_row = [None for i in range(width)]
         map_grid.insert(0, new_row)
     if col < 0:
         offset[1] = 1
@@ -166,12 +187,14 @@ def expand_grid(map_grid, row, col, next_rooms):
             row.append(None)
     for row in map_grid:
         for room in row:
-            pass
-            # TODO add offset to coordinates of each room
+            if room is not None:
+                room.coords[0] = room.coords[0] + offset[0]
+                room.coords[1] = room.coords[1] + offset[1]
 
     for room in next_rooms:
-        pass
-        #TODO add offset to coordinates for each room
+        room.coords[0] = room.coords[0] + offset[0]
+        room.coords[1] = room.coords[1] + offset[1]
+    return offset
 
 if __name__ == '__main__':
     sys.exit(main())
