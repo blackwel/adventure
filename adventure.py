@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-# TODO - fix display_all() so that it adds spaces where needed
-# TODO - fix wizard to be displayed last of monsters
 # TODO - fix duplicate pick up of second potion
 
 from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
@@ -35,7 +33,7 @@ def main():
 
     try:
         # TODO - map file discovery
-        for level in (1, 2):
+        for level in range(1,4):
             mapname = "adventure%d.map" % level
 
             play_level(mapname, player)
@@ -129,6 +127,7 @@ def build_map_grid(room1):
         current_room = next_rooms.pop()
         row, col = current_room.coords
 
+        logging.debug("row, col: %d %d"  % (row, col))
         if row >= map_height or row < 0 or col >= map_width or col > 0:
             offset = expand_grid(map_grid,row, col, next_rooms)
             current_room.coords[0] = current_room.coords[0] + offset[0]
@@ -136,7 +135,9 @@ def build_map_grid(room1):
             row = row + offset[0]
             col = col + offset[1]
 
-        # TODO - fix IndexError when loading adventure2.map
+        logging.debug("expanded row, col: %d %d   size: %d %d" %
+                      (row, col, len(map_grid), len(map_grid[0])))
+        logging.debug("row length: %d" % len(map_grid[row]))
         if map_grid[row][col] is not None:
             raise Exception("duplicate room")
         map_grid[row][col] = current_room
@@ -167,27 +168,31 @@ def build_map_grid(room1):
     return map_grid
 
 def expand_grid(map_grid, row, col, next_rooms):
-    # TODO - expand the grid in a given direction
-
     height = len(map_grid)
     width = len(map_grid[0])
 
     offset = [0, 0]
 
     if row < 0:
+        logging.debug("expanding backwards")
         offset[0] = 1
         new_row = [None for i in range(width)]
         map_grid.insert(0, new_row)
     if col < 0:
+        logging.debug("expanding left")
         offset[1] = 1
+        width = width +1 
         for row in map_grid:
             row.insert(0, None)
     if row >= height:
+        logging.debug("expanding backwards")
         new_row = [None for i in range(width)]
         map_grid.append(new_row)
     if col >= width:
+        logging.debug("expanding right")
         for row in map_grid:
             row.append(None)
+
     for row in map_grid:
         for room in row:
             if room is not None:

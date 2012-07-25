@@ -98,6 +98,19 @@ class Room(object):
                 return c
         return None
 
+    def choose_enemy(self):
+        enemies = [c for c in self.characters if not isinstance(c, characters.Player)]
+        print "which enemy do you want to attack?"
+        try:
+            i = int(raw_input())
+
+            if i > 0 and i <= len(enemies):
+                return  enemies[i-1]
+        except ValueError:
+            pass
+
+        return None
+
     def add_items(self, items):
         if isinstance(items, list):
             self.items.extend(items)

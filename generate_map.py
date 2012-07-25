@@ -57,10 +57,15 @@ def check_connection(connections, room_name, direction, other_room_name):
         r = conect.keys()[0]
         d = conect[r].keys()[0]
         o = conect[r].values()[0]
-        if r == room_name and d is opposite(direction):
+        if r == room_name and d is direction:
+            return False
+        if r == other_room_name and d is opposite(direction):
+            return False
+        if o == room_name and d is opposite(direction):
             return False
         if o == other_room_name and d is direction:
             return False
+
     return True
 
 def create_monster(monster_num, room):
@@ -79,7 +84,7 @@ def create_wizard(map_dict, num_rooms):
     room["wizard"] = wizard
 
 class TestOpposite(unittest.TestCase):
-    def test_opposite(self):
+    def test_directions(self):
         self.assertIs(opposite(LEFT), RIGHT)
         self.assertIs(opposite(RIGHT), LEFT)
         self.assertIs(opposite(FORWARDS), BACKWARDS)
@@ -89,12 +94,20 @@ class TestConnection(unittest.TestCase):
     def setUp(self):
         self.connections = [ { "room2" : { "right" : "room1" } } ]
 
+    def test_none(self):
+        self.assertTrue( check_connection([], "room2", RIGHT, "room7"))
+
     def test_same(self):
         self.assertFalse( check_connection(self.connections, "room2", RIGHT, "room7") )
 
+    def test_same2(self):
+        self.assertFalse( check_connection(self.connections, "room7", RIGHT, "room1") )
+
     def test_opposite(self):
-        # TODO - fix this test failure
         self.assertFalse( check_connection(self.connections, "room7", LEFT, "room2") )
+
+    def test_opposite2(self):
+        self.assertFalse( check_connection(self.connections, "room1", LEFT, "room3") )
 
 def run_tests():
     unittest.main('generate_map')

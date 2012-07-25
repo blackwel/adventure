@@ -23,7 +23,7 @@ class Sword(Weapon):
 
     def use(self, player, room):
         print "you attack with a sword"
-        enemy = room.get_enemy()
+        enemy = room.choose_enemy()
         if enemy is None:
             print "you swing the sword and hit nothing."
             return

@@ -1,0 +1,123 @@
+{
+    "room10": {
+        "monster0": {
+            "health": 18, 
+            "class": "Monster"
+        }
+    }, 
+    "room6": {}, 
+    "room12": {
+        "monster0": {
+            "health": 14, 
+            "class": "Monster"
+        }, 
+        "monster1": {
+            "health": 15, 
+            "class": "Monster"
+        }
+    }, 
+    "room13": {
+        "monster0": {
+            "health": 20, 
+            "class": "Monster"
+        }, 
+        "monster1": {
+            "health": 24, 
+            "class": "Monster"
+        }
+    }, 
+    "room11": {}, 
+    "connections": [
+        {
+            "room2": {
+                "left": "room1"
+            }
+        }, 
+        {
+            "room3": {
+                "backwards": "room2"
+            }
+        }, 
+        {
+            "room4": {
+                "left": "room3"
+            }
+        }, 
+        {
+            "room5": {
+                "forwards": "room2"
+            }
+        }, 
+        {
+            "room6": {
+                "forwards": "room4"
+            }
+        }, 
+        {
+            "room7": {
+                "right": "room1"
+            }
+        }, 
+        {
+            "room8": {
+                "forwards": "room7"
+            }
+        }, 
+        {
+            "room9": {
+                "right": "room3"
+            }
+        }, 
+        {
+            "room10": {
+                "backwards": "room7"
+            }
+        }, 
+        {
+            "room11": {
+                "forwards": "room8"
+            }
+        }, 
+        {
+            "room12": {
+                "left": "room6"
+            }
+        }, 
+        {
+            "room13": {
+                "backwards": "room4"
+            }
+        }
+    ], 
+    "room7": {
+        "monster0": {
+            "health": 11, 
+            "class": "Monster"
+        }, 
+        "monster1": {
+            "health": 21, 
+            "class": "Monster"
+        }
+    }, 
+    "room4": {
+        "monster0": {
+            "health": 21, 
+            "class": "Monster"
+        }, 
+        "monster1": {
+            "health": 11, 
+            "class": "Monster"
+        }
+    }, 
+    "room5": {}, 
+    "room2": {}, 
+    "room3": {}, 
+    "room1": {}, 
+    "room8": {
+        "wizard": {
+            "health": 21, 
+            "class": "wizard"
+        }
+    }, 
+    "room9": {}
+}
