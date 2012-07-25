@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
 # TODO - fix display_all() so that it adds spaces where needed
+# TODO - fix wizard to be displayed last of monsters
+# TODO - fix duplicate pick up of second potion
 
 from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
 
@@ -134,6 +136,7 @@ def build_map_grid(room1):
             row = row + offset[0]
             col = col + offset[1]
 
+        # TODO - fix IndexError when loading adventure2.map
         if map_grid[row][col] is not None:
             raise Exception("duplicate room")
         map_grid[row][col] = current_room

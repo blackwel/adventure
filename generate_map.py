@@ -90,8 +90,7 @@ class TestConnection(unittest.TestCase):
         self.connections = [ { "room2" : { "right" : "room1" } } ]
 
     def test_same(self):
-        # TODO - implement this test case
-        pass
+        self.assertFalse( check_connection(self.connections, "room2", RIGHT, "room7") )
 
     def test_opposite(self):
         # TODO - fix this test failure
