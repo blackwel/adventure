@@ -22,12 +22,23 @@ import characters
 import items
 import map
 
+import pygame
+
 class QuitException(Exception):
     pass
+
+BLACK = (0,0,0)
+GRAY = (128,128,128)
+
 
 def main():
     logging.basicConfig(filename="adventure.log", filemode='w+', level=logging.DEBUG)
     logging.info("Starting up adventure game")
+
+    window_size = 800, 600
+    pygame.init()
+    screen = pygame.display.set_mode(window_size)
+    pygame.display.set_caption("'MERICA")
 
     player = characters.Player(None, 100)
 
@@ -36,10 +47,11 @@ def main():
         for level in range(1,4):
             mapname = "adventure%d.map" % level
 
-            play_level(mapname, player)
+            play_level(screen, mapname, player)
 
             if not player.is_alive():
                 return
+
     except QuitException:
         pass
 
@@ -57,7 +69,12 @@ def display_all(room):
             print " ".join(line)
         room = room.backwards
 
-def display_grid(map_grid):
+def display_grid(screen, map_grid):
+
+    screen.fill(BLACK)
+    #screen.blit(text, text_rect)
+    pygame.display.flip()
+
     for row in map_grid:
         display_rooms = []
         for r in row:
@@ -93,7 +110,7 @@ def do_action(action, player):
         print "I didn't understand '%s', must be one of %r" % (action, ALL_ACTIONS)
     return True
 
-def play_level(mapname, player):
+def play_level(screen, mapname, player):
     room1, wizard = map.create_map(mapname)
     room1.add_character(player)
     player.location = room1
@@ -101,7 +118,7 @@ def play_level(mapname, player):
     map_grid = build_map_grid(room1)
 
     while player.is_alive() and wizard.is_alive(): 
-        display_grid(map_grid)
+        display_grid(screen, map_grid)
         print "what do you want to do this turn pick up an item? or use an item? or move right, left, forwards, or  backwards"
 
         # TODO - make this accept extra spaces
