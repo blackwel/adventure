@@ -4,6 +4,7 @@ from directions import LEFT, RIGHT, FORWARDS, BACKWARDS
 import items
 import random
 import logging
+import pygame
 
 class Character(object):
     items = None
@@ -44,7 +45,12 @@ class Character(object):
     def is_alive(self):
         return self.health>=1
 
+    def display_image(self):
+        return None
+
 class Player(Character):
+    image = pygame.transform.scale(pygame.image.load('stick_figure_sword.jpeg'), (30,30))
+
     def __init__(self, location, health):
         Character.__init__(self, location, health)
         self.items.append(items.Sword())
@@ -73,6 +79,9 @@ class Player(Character):
             return
         items.use(self, self.location)
 
+    def display_image(self):
+        return Player.image
+
 class Monster(Character):
     hurts  = (3,5)
 
@@ -94,7 +103,7 @@ class Monster(Character):
 
 class wizard(Character):
     hurts  = (5,10)
-
+    image = pygame.transform.scale(pygame.image.load('wizard.jpeg'), (30,30))
     def __init__(self, location, health):
         Character.__init__(self, location, health)
         if random.random() < 0.3:
@@ -110,3 +119,7 @@ class wizard(Character):
         d = random.randrange(self.hurts[0], self.hurts[1])
         print("the wizard shoots a death ball at you for damage %d" %d)
         player.damage(d)
+
+    def display_image(self):
+        return wizard.image
+    

@@ -29,7 +29,7 @@ class QuitException(Exception):
 
 BLACK = (0,0,0)
 GRAY = (128,128,128)
-
+WHITE = (255,255,255)
 
 def main():
     logging.basicConfig(filename="adventure.log", filemode='w+', level=logging.DEBUG)
@@ -73,10 +73,18 @@ def display_grid(screen, map_grid):
 
     screen.fill(BLACK)
     #screen.blit(text, text_rect)
-    pygame.display.flip()
+
+    ROOM_HEIGHT = 72
+    ROOM_WIDTH = 72
+    ROOM_SPACE = 4
+    CELL_WIDTH = ROOM_WIDTH + 2 * ROOM_SPACE
+    CELL_HEIGHT = ROOM_HEIGHT + 2 * ROOM_SPACE
+
+    grid_y = 0
 
     for row in map_grid:
         display_rooms = []
+        grid_x = 0
         for r in row:
             display = None
             if r is None:
@@ -84,9 +92,45 @@ def display_grid(screen, map_grid):
             else:
                 display = r.display()
             display_rooms.append(display)
+
+            def coords((x,y)):
+                return (grid_x * CELL_WIDTH + ROOM_SPACE + ROOM_WIDTH * x,
+                        grid_y * CELL_HEIGHT + ROOM_SPACE + ROOM_HEIGHT * y)
+
+            if r is not None:
+                points = [(0,0), (0,1), (1,1), (1,0)]
+                pygame.draw.line(screen, WHITE, coords(points[0]), coords(points[1]))
+                pygame.draw.line(screen, WHITE, coords(points[1]), coords(points[2]))
+                pygame.draw.line(screen, WHITE, coords(points[2]), coords(points[3]))
+                pygame.draw.line(screen, WHITE, coords(points[3]), coords(points[0]))
+
+                if r.right is not None:
+                    pygame.draw.line(screen, WHITE, (grid_x * CELL_WIDTH + ROOM_SPACE + ROOM_WIDTH,((grid_y+0.5) * CELL_HEIGHT)),
+                                                    ((grid_x+1) * CELL_WIDTH,(grid_y+0.5) * CELL_HEIGHT))
+                if r.left is not None:
+                    pygame.draw.line(screen, WHITE, (grid_x * CELL_WIDTH + ROOM_SPACE,((grid_y+0.5) * CELL_HEIGHT)),
+                                                    (grid_x * CELL_WIDTH,(grid_y+0.5) * CELL_HEIGHT))
+                if r.forwards is not None:
+                    pygame.draw.line(screen, WHITE, ((grid_x+0.5) * CELL_WIDTH, grid_y * CELL_HEIGHT + ROOM_SPACE),
+                                     ((grid_x+0.5) * CELL_WIDTH,grid_y * CELL_HEIGHT))
+                if r.backwards is not None:
+                    pygame.draw.line(screen, WHITE, ((grid_x+0.5) * CELL_WIDTH,(grid_y * CELL_HEIGHT + ROOM_SPACE + ROOM_HEIGHT)),
+                                                    ((grid_x+0.5) * CELL_WIDTH,(grid_y+1) * CELL_HEIGHT))
+
+                for c in r.characters:
+                    character_image = c.display_image()
+                    if character_image is not None:
+                        rect = character_image.get_rect().move((grid_x * CELL_WIDTH + ROOM_SPACE + 2, grid_y * CELL_HEIGHT + ROOM_SPACE + 2))
+                        screen.blit(character_image, rect)
+
+            grid_x = grid_x + 1
         for i in range(5):
             line = [r[i] for r in display_rooms]
             print " ".join(line)
+
+        grid_y = grid_y + 1
+
+    pygame.display.flip()
 
 def do_action(action, player):
     if action is PICK_UP:
